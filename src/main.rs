@@ -1,4 +1,6 @@
-use poem::{get, handler, listener::TcpListener, middleware::Tracing, web::Path, EndpointExt, Route, Server};
+use poem::{
+    get, handler, listener::TcpListener, middleware::Tracing, web::Path, EndpointExt, Route, Server,
+};
 use poem_openapi::{param::Query, payload::PlainText, OpenApi, OpenApiService};
 
 #[handler]
@@ -30,7 +32,11 @@ async fn main() -> Result<(), std::io::Error> {
         OpenApiService::new(Api, "Hello World", "1.0").server("http://localhost:3000/api");
     let ui = api_service.swagger_ui();
 
-    let app = Route::new().at("/hello/:name", get(hello)).nest("/api", api_service).nest("/", ui).with(Tracing);    
+    let app = Route::new()
+        .at("/hello/:name", get(hello))
+        .nest("/api", api_service)
+        .nest("/", ui)
+        .with(Tracing);
     Server::new(TcpListener::bind("127.0.0.1:3000"))
         .name("hello-world")
         .run(app)

@@ -30,13 +30,18 @@ async fn main() -> Result<(), std::io::Error> {
 
     let api_service =
         OpenApiService::new(Api, "Hello World", "1.0").server("http://localhost:3000/api");
-    let ui = api_service.swagger_ui();
+    let swagger = api_service.swagger_ui();
+    let rapidoc = api_service.rapidoc();
+    let redoc = api_service.redoc();
 
     let app = Route::new()
         .at("/hello/:name", get(hello))
         .nest("/api", api_service)
-        .nest("/", ui)
+        .nest("/swagger", swagger)
+        .nest("/rapidoc", rapidoc)
+        .nest("/redoc", redoc)
         .with(Tracing);
+
     Server::new(TcpListener::bind("127.0.0.1:3000"))
         .name("hello-world")
         .run(app)

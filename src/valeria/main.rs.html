@@ -47,6 +47,11 @@
 <span id="42">42</span>
 <span id="43">43</span>
 <span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">poem</span>::{
     <span class="ident">get</span>, <span class="ident">handler</span>, <span class="ident">listener::TcpListener</span>, <span class="ident">middleware::Tracing</span>, <span class="ident">web::Path</span>, <span class="ident">EndpointExt</span>, <span class="ident">Route</span>, <span class="ident">Server</span>,
 };
@@ -79,13 +84,18 @@
 
     <span class="kw">let</span> <span class="ident">api_service</span> <span class="op">=</span>
         <span class="ident">OpenApiService::new</span>(<span class="ident">Api</span>, <span class="string">&quot;Hello World&quot;</span>, <span class="string">&quot;1.0&quot;</span>).<span class="ident">server</span>(<span class="string">&quot;http://localhost:3000/api&quot;</span>);
-    <span class="kw">let</span> <span class="ident">ui</span> <span class="op">=</span> <span class="ident">api_service</span>.<span class="ident">swagger_ui</span>();
+    <span class="kw">let</span> <span class="ident">swagger</span> <span class="op">=</span> <span class="ident">api_service</span>.<span class="ident">swagger_ui</span>();
+    <span class="kw">let</span> <span class="ident">rapidoc</span> <span class="op">=</span> <span class="ident">api_service</span>.<span class="ident">rapidoc</span>();
+    <span class="kw">let</span> <span class="ident">redoc</span> <span class="op">=</span> <span class="ident">api_service</span>.<span class="ident">redoc</span>();
 
     <span class="kw">let</span> <span class="ident">app</span> <span class="op">=</span> <span class="ident">Route::new</span>()
         .<span class="ident">at</span>(<span class="string">&quot;/hello/:name&quot;</span>, <span class="ident">get</span>(<span class="ident">hello</span>))
         .<span class="ident">nest</span>(<span class="string">&quot;/api&quot;</span>, <span class="ident">api_service</span>)
-        .<span class="ident">nest</span>(<span class="string">&quot;/&quot;</span>, <span class="ident">ui</span>)
+        .<span class="ident">nest</span>(<span class="string">&quot;/swagger&quot;</span>, <span class="ident">swagger</span>)
+        .<span class="ident">nest</span>(<span class="string">&quot;/rapidoc&quot;</span>, <span class="ident">rapidoc</span>)
+        .<span class="ident">nest</span>(<span class="string">&quot;/redoc&quot;</span>, <span class="ident">redoc</span>)
         .<span class="ident">with</span>(<span class="ident">Tracing</span>);
+
     <span class="ident">Server::new</span>(<span class="ident">TcpListener::bind</span>(<span class="string">&quot;127.0.0.1:3000&quot;</span>))
         .<span class="ident">name</span>(<span class="string">&quot;hello-world&quot;</span>)
         .<span class="ident">run</span>(<span class="ident">app</span>)

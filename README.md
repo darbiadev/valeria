@@ -1,0 +1,2 @@
+# valeria
+Manufacturing focused ERP
